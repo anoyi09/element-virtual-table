@@ -6,35 +6,92 @@
       check out the
       <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
     </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+    <div>
+      <v-table :data="tableData" border :height="500" style="width: 100%">
+        <el-table-column
+          fixed="left"
+          prop="date"
+          label="日期"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          fixed="left"
+          prop="name"
+          label="姓名"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          :width="140"
+          prop="address"
+          label="地址">
+        </el-table-column>
+        <el-table-column v-for="item in 25" :key="item"
+          :width="140"
+          :prop="`name${item}`"
+          :label="`明朝${item}`">
+        </el-table-column>
+        <el-table-column
+          :width="140"
+          fixed="right"
+          prop="actions"
+          label="操作">
+          <el-button type="text">查看</el-button>
+        </el-table-column>
+      </v-table>
+    </div>
   </div>
 </template>
 
 <script>
+// import Vue from 'vue'
+// import ElTable from './table/index'
+// Vue.use(ElTable)
 export default {
   name: 'HelloWorld',
+  // components:{ ElTable },
   props: {
     msg: String
+  },
+  data() {
+    const tableData = []
+    for(let i = 0; i < 100; i++) {
+      tableData.push({
+        id:'id' + i,
+        date: '2016-05-02',
+        name: '王小虎' + i,
+        address: '上海市普陀区金沙江路 1518 弄 ' + i,
+        name0:Math.floor(Math.random() * 10000) + 'xxxx',
+        name1:Math.floor(Math.random() * 10000) + 'xxxx',
+        name2:Math.floor(Math.random() * 10000) + 'xxxx',
+        name3:Math.floor(Math.random() * 10000) + 'xxxx',
+        name4:Math.floor(Math.random() * 10000) + 'xxxx',
+        name5:Math.floor(Math.random() * 10000) + 'xxxx',
+        name6:Math.floor(Math.random() * 10000) + 'xxxx',
+        name7:Math.floor(Math.random() * 10000) + 'xxxx',
+        name8:Math.floor(Math.random() * 10000) + 'xxxx',
+        name9:Math.floor(Math.random() * 10000) + 'xxxx',
+        name10:Math.floor(Math.random() * 10000) + 'xxxx',
+        name11:Math.floor(Math.random() * 10000) + 'xxxx',
+        name12:Math.floor(Math.random() * 10000) + 'xxxx',
+        name13:Math.floor(Math.random() * 10000) + 'xxxx',
+        name14:Math.floor(Math.random() * 10000) + 'xxxx',
+        name15: Math.floor(Math.random() * 10000) + 'xxxx',
+        name16: Math.floor(Math.random() * 10000) + 'xxxx',
+        name17: Math.floor(Math.random() * 10000) + 'xxxx',
+        name18: Math.floor(Math.random() * 10000) + 'xxxx',
+        name19: Math.floor(Math.random() * 10000) + 'xxxx',
+        name20: Math.floor(Math.random() * 10000) + 'xxxx',
+        name21: Math.floor(Math.random() * 10000) + 'xxxx',
+        name22: Math.floor(Math.random() * 10000) + 'xxxx',
+        name23: Math.floor(Math.random() * 10000) + 'xxxx',
+        name24: Math.floor(Math.random() * 10000) + 'xxxx',
+        name25: Math.floor(Math.random() * 10000) + 'xxxx',
+        name26: Math.floor(Math.random() * 10000) + 'xxxx',
+      })
+    }
+    return {
+      tableData: tableData
+    }
   }
 }
 </script>
