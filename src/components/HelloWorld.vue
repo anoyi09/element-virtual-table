@@ -12,23 +12,23 @@
           fixed="left"
           prop="date"
           label="日期"
-          width="180">
+          :width="180">
         </el-table-column>
         <el-table-column
           fixed="left"
           prop="name"
           label="姓名"
-          width="180">
+          :width="180">
         </el-table-column>
         <el-table-column
-          :width="140"
+          :width="240"
           prop="address"
           label="地址">
         </el-table-column>
         <el-table-column v-for="item in 25" :key="item"
-          :width="140"
+          :width="180"
           :prop="`name${item}`"
-          :label="`明朝${item}`">
+          :label="`明朝的法律时代的${item}`">
         </el-table-column>
         <el-table-column
           :width="140"

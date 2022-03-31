@@ -35,6 +35,7 @@
       :class="[layout.scrollX ? `is-scrolling-${scrollPosition}` : 'is-scrolling-none']"
       :style="[bodyHeight]">
       <table-body
+        :scrollData="scrollData"
         :context="context"
         :store="store"
         :stripe="stripe"
@@ -428,6 +429,8 @@
         } else {
           this.scrollPosition = 'middle';
         }
+        this.scrollData.sLeft = scrollLeft
+        this.scrollData.sTop = scrollTop
       }),
 
       bindEvents() {
@@ -632,7 +635,6 @@
     },
 
     mounted() {
-      console.log('xxxxxxxxxxxxxxxxxxxxxx')
       this.bindEvents();
       this.store.updateColumns();
       this.doLayout();
@@ -689,7 +691,11 @@
         },
         // 是否拥有多级表头
         isGroup: false,
-        scrollPosition: 'left'
+        scrollPosition: 'left',
+        scrollData:{
+          sLeft:0,
+          sTop:0
+        }
       };
     }
   };

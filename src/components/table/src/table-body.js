@@ -28,7 +28,11 @@ export default {
     rowClassName: [String, Function],
     rowStyle: [Object, Function],
     fixed: String,
-    highlight: Boolean
+    highlight: Boolean,
+    scrollData:{
+      type:Object,
+      default:() => ({})
+    }
   },
 
   render() {
@@ -43,7 +47,7 @@ export default {
           {
             this.columns
               .filter((column, index) => !(this.columnsHidden[index] && this.fixed))
-              .map(column => <col name={column.id} key={column.id} />)
+              .map(column => <col name={column.id} key={column.id} width={column.width} />)
           }
         </colgroup>
         <tbody>
@@ -69,10 +73,33 @@ export default {
     table() {
       return this.$parent;
     },
-
+    // 需要渲染得行数
+    renderMaxColumnsCount() {
+      const columns = this.store.states.columns
+      const len = columns.length
+      if (!columns || len === 0) return 0
+      const visualWidth = this.$parent.bodyWrapper.offsetWidth + 150
+      let totalWidth = 0, maxCount = 0, i = 0
+      for(let j = 0; j < len; j++) {
+        const cWidth = columns[j].width || 80
+        const headCWidth = columns[i].width || 80
+        totalWidth += cWidth
+        if (totalWidth - headCWidth > visualWidth) {
+          maxCount = (j - i) > maxCount ? (j - i) : maxCount
+          totalWidth -= headCWidth
+          i++
+        }
+      }
+      console.log(maxCount, 'maxCount')
+      return maxCount || len
+    },
+    columns(){
+      const columns = this.store.states.columns
+      return this.computedColumns(columns)
+    },
     ...mapStates({
       data: 'data',
-      columns: 'columns',
+      
       treeIndent: 'indent',
       leftFixedLeafCount: 'fixedLeafColumnsLength',
       rightFixedLeafCount: 'rightFixedLeafColumnsLength',
@@ -125,6 +152,32 @@ export default {
   },
 
   methods: {
+    computedColumns(oldColumns) {
+      const renderCount = this.renderMaxColumnsCount
+      const len = oldColumns.length
+      let leftPx = this.scrollData.sLeft
+      if (renderCount === len || leftPx === undefined) return oldColumns
+      if (len === 0 || !this.$el) return []
+      // console.log(renderCount,len, leftPx)
+      let cellPx = 0, virtualWidth = 0, n = 0, newColumns = []
+      oldColumns.forEach((column, i) => {
+        const cWidth = column.width || 80
+        const preCellPx = cellPx
+        cellPx += cWidth
+        if ((cellPx > leftPx || len - i < renderCount) && n < renderCount) {
+          virtualWidth += cWidth
+          if (leftPx > 0 && leftPx > preCellPx) leftPx = preCellPx
+          n++
+          newColumns.push(column)
+        }
+      })
+      const paddingRight = cellPx - leftPx - virtualWidth
+      this.$el.style.paddingLeft = leftPx + 'px'
+      this.$el.style.paddingRight = paddingRight + 'px'
+      this.$el.style.width = virtualWidth + 'px'
+      // console.log(paddingRight,leftPx, virtualWidth, newColumns)
+      return newColumns
+    },
     getKeyOfRow(row, index) {
       const rowKey = this.table.rowKey;
       if (rowKey) {
