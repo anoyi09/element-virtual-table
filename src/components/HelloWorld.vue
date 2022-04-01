@@ -7,7 +7,7 @@
       <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
     </p>
     <div>
-      <v-table virtual :data="tableData" border max-height="500" style="width: 100%">
+      <v-table virtual virtualColumn lazy :tree-props="{children: 'children', hasChildren: 'hasChildren'}" row-key="id" :data="tableData" border max-height="500" style="width: 100%">
         <el-table-column
           fixed="left"
           prop="date"
@@ -25,7 +25,7 @@
           prop="address"
           label="地址">
         </el-table-column>
-        <el-table-column v-for="item in 25" :key="item"
+        <el-table-column v-for="item in 10" :key="item"
           :width="180"
           :prop="`name${item}`"
           :label="`明朝的法律时代的${item}`">
@@ -54,7 +54,7 @@ export default {
   },
   data() {
     const tableData = []
-    for(let i = 0; i < 3000; i++) {
+    for(let i = 0; i < 300; i++) {
       tableData.push({
         id:'id' + i,
         date: '2016-05-02',
@@ -87,6 +87,41 @@ export default {
         name24: Math.floor(Math.random() * 10000) + 'xxxx',
         name25: Math.floor(Math.random() * 10000) + 'xxxx',
         name26: Math.floor(Math.random() * 10000) + 'xxxx',
+        children:[
+          {
+            id:'idi' + i,
+            date: '2016-05-02',
+            name: '王小虎i' + i,
+            address: '上海市普陀区金沙江路 1518 弄i ' + i,
+            name1:Math.floor(Math.random() * 10000) + 'xxxx了士大夫士大夫士大夫士大夫士大夫',
+            name2:Math.floor(Math.random() * 10000) + 'xxxx',
+            name3:Math.floor(Math.random() * 10000) + 'xxxx',
+            name4:Math.floor(Math.random() * 10000) + 'xxxx',
+            name5:Math.floor(Math.random() * 10000) + 'xxxx',
+          },
+          {
+            id:'idd' + i,
+            date: '2016-05-02',
+            name: '王小虎d' + i,
+            address: '上海市普陀区金沙江路 1518 弄d ' + i,
+            name1:Math.floor(Math.random() * 10000) + 'xxxx了士大夫士大夫士大夫士大夫士大夫',
+            name2:Math.floor(Math.random() * 10000) + 'xxxx',
+            name3:Math.floor(Math.random() * 10000) + 'xxxx',
+            name4:Math.floor(Math.random() * 10000) + 'xxxx',
+            name5:Math.floor(Math.random() * 10000) + 'xxxx',
+          },
+          {
+            id:'idc' + i,
+            date: '2016-05-02',
+            name: '王小虎c' + i,
+            address: '上海市普陀区金沙江路 1518 弄c ' + i,
+            name1:Math.floor(Math.random() * 10000) + 'xxxx了士大夫士大夫士大夫士大夫士大夫',
+            name2:Math.floor(Math.random() * 10000) + 'xxxx',
+            name3:Math.floor(Math.random() * 10000) + 'xxxx',
+            name4:Math.floor(Math.random() * 10000) + 'xxxx',
+            name5:Math.floor(Math.random() * 10000) + 'xxxx',
+          }
+        ]
       })
     }
     return {

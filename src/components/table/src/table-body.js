@@ -83,10 +83,10 @@ export default {
     virtualTotalHeight() {
       return this.store.states.data.reduce((total) => (total + this.rowHeight), 0)
     },
-    // 最大需要渲染的列数
+    // 最大需要渲染的行数
     renderMaxRowCount() {
-      if (!this.$parent.virtual) return 0
-      const tableHeight = parseInt(this.$parent.bodyHeight.height || this.$parent.bodyHeight['max-height']) || 0;
+      if (!this.table.virtual) return 0
+      const tableHeight = parseInt(this.table.bodyHeight.height || this.table.bodyHeight['max-height']) || 0;
       if (!tableHeight) return 0;
       let maxCount = Math.ceil(tableHeight / this.rowHeight) + 3
       // console.log('renderMaxRowCount:', maxCount);
@@ -94,11 +94,11 @@ export default {
     },
     // 最大需要渲染得列数
     renderMaxColumnsCount() {
-      if (!this.$parent.virtual || !this.$parent.virtualColumn) return 0
+      if (!this.table.virtual || !this.table.virtualColumn) return 0
       const columns = this.store.states.columns
       const len = columns.length
       if (!columns || len === 0) return 0
-      const virtualWidth = this.$parent.bodyWrapper.offsetWidth + 150
+      const virtualWidth = this.table.bodyWrapper.offsetWidth + 150
       let totalWidth = 0, maxCount = 0, j = 0, i = 0
       while(j < len) {
         const cWidth = columns[j].width || 80
@@ -180,11 +180,11 @@ export default {
   methods: {
     // 计算展示行
     computeRows(oldRows) {
-      if (!this.$parent.virtual) return oldRows
-      const renderCount = this.renderMaxRowCount;
+      if (!this.table.virtual) return oldRows
+      const renderCount = this.renderMaxRowCount
       const len = oldRows.length
       let topPx = this.tableScrollTop
-      if (!renderCount || len < renderCount || !this.$el) return oldRows;
+      if (!renderCount || len < renderCount || !this.$el) return oldRows
       let newRows = []
       let start = Math.ceil(topPx / this.rowHeight) - 2
       const maxStart = len - renderCount
@@ -210,7 +210,7 @@ export default {
     },
     // 计算展示列
     computeColumns(oldColumns) {
-      if (!this.$parent.virtual || !this.$parent.virtualColumn) return oldColumns
+      if (!this.table.virtual || !this.table.virtualColumn) return oldColumns
       const renderCount = this.renderMaxColumnsCount
       const len = oldColumns.length
       let leftPx = this.tableScrollLeft
@@ -232,6 +232,7 @@ export default {
       this.$el.style.paddingRight = this.virtualTotalWidth - leftPx - virtualWidth + 'px'
       return newColumns
     },
+    
     getKeyOfRow(row, index) {
       const rowKey = this.table.rowKey;
       if (rowKey) {
