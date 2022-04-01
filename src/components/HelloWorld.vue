@@ -46,14 +46,7 @@
 // import Vue from 'vue'
 // import ElTable from './table/index'
 // Vue.use(ElTable)
-export default {
-  name: 'HelloWorld',
-  // components:{ ElTable },
-  props: {
-    msg: String
-  },
-  data() {
-    const tableData = []
+const tableData = []
     for(let i = 0; i < 300; i++) {
       tableData.push({
         id:'id' + i,
@@ -124,9 +117,21 @@ export default {
         ]
       })
     }
+export default {
+  name: 'HelloWorld',
+  // components:{ ElTable },
+  props: {
+    msg: String
+  },
+  data() {
     return {
-      tableData: tableData
+      tableData: []
     }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.tableData = tableData
+    }, 500);
   }
 }
 </script>
