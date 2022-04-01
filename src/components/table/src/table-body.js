@@ -29,10 +29,8 @@ export default {
     rowStyle: [Object, Function],
     fixed: String,
     highlight: Boolean,
-    scrollData:{
-      type:Object,
-      default:() => ({})
-    }
+    tableScrollLeft:Number,
+    tableScrollTop:Number
   },
 
   render() {
@@ -47,7 +45,7 @@ export default {
           {
             this.columns
               .filter((column, index) => !(this.columnsHidden[index] && this.fixed))
-              .map(column => <col name={column.id} key={column.id} width={column.width} />)
+              .map(column => <col name={column.id} key={column.id} width={column.width || 80} />)
           }
         </colgroup>
         <tbody>
@@ -73,33 +71,61 @@ export default {
     table() {
       return this.$parent;
     },
-    // 需要渲染得行数
+    // 表格行高
+    rowHeight() {
+      return this.$parent.rowHeight
+    },
+    // 总宽度
+    virtualTotalWidth() {
+      return this.store.states.columns.reduce((total, col) => (total + col.width || 80), 0)
+    },
+    // 总高度
+    virtualTotalHeight() {
+      return this.store.states.data.reduce((total) => (total + this.rowHeight), 0)
+    },
+    // 最大需要渲染的列数
+    renderMaxRowCount() {
+      if (!this.$parent.virtual) return 0
+      const tableHeight = parseInt(this.$parent.bodyHeight.height || this.$parent.bodyHeight['max-height']) || 0;
+      if (!tableHeight) return 0;
+      let maxCount = Math.ceil(tableHeight / this.rowHeight) + 3
+      // console.log('renderMaxRowCount:', maxCount);
+      return maxCount
+    },
+    // 最大需要渲染得列数
     renderMaxColumnsCount() {
+      if (!this.$parent.virtual || !this.$parent.virtualColumn) return 0
       const columns = this.store.states.columns
       const len = columns.length
       if (!columns || len === 0) return 0
-      const visualWidth = this.$parent.bodyWrapper.offsetWidth + 150
-      let totalWidth = 0, maxCount = 0, i = 0
-      for(let j = 0; j < len; j++) {
+      const virtualWidth = this.$parent.bodyWrapper.offsetWidth + 150
+      let totalWidth = 0, maxCount = 0, j = 0, i = 0
+      while(j < len) {
         const cWidth = columns[j].width || 80
         const headCWidth = columns[i].width || 80
         totalWidth += cWidth
-        if (totalWidth - headCWidth > visualWidth) {
+        if (totalWidth - headCWidth > virtualWidth) {
           maxCount = (j - i) > maxCount ? (j - i) : maxCount
           totalWidth -= headCWidth
           i++
         }
+        columns[j].showOverflowTooltip = true
+        j++
       }
-      console.log(maxCount, 'maxCount')
+      // console.log(maxCount, 'maxCount')
       return maxCount || len
     },
     columns(){
       const columns = this.store.states.columns
-      return this.computedColumns(columns)
+      return this.computeColumns(columns)
+    },
+    data() {
+      const rows = this.store.states.data;
+      return this.computeRows(rows);
     },
     ...mapStates({
-      data: 'data',
-      
+      // data: 'data',
+      // columns:'columns',
       treeIndent: 'indent',
       leftFixedLeafCount: 'fixedLeafColumnsLength',
       rightFixedLeafCount: 'rightFixedLeafColumnsLength',
@@ -152,30 +178,58 @@ export default {
   },
 
   methods: {
-    computedColumns(oldColumns) {
+    // 计算展示行
+    computeRows(oldRows) {
+      if (!this.$parent.virtual) return oldRows
+      const renderCount = this.renderMaxRowCount;
+      const len = oldRows.length
+      let topPx = this.tableScrollTop
+      if (!renderCount || len < renderCount || !this.$el) return oldRows;
+      let newRows = []
+      let start = Math.ceil(topPx / this.rowHeight) - 2
+      const maxStart = len - renderCount
+      start = start < 0 ? 0 : (start < maxStart ? start : maxStart)
+      topPx = start * this.rowHeight
+      const virtualHeight = renderCount * this.rowHeight
+      newRows = oldRows.slice(start, start + renderCount)
+      /* let rowPx = 0, virtualHeight = 0, n = 0, rHeight = this.rowHeight, newRows = []
+      for(let i = 0; i < len; i++) {
+        const preRowPx = rowPx
+        rowPx += rHeight
+        if ((rowPx > topPx || len - i < renderCount) && n < renderCount) {
+          virtualHeight += rHeight
+          if (topPx > 0 && topPx > preRowPx) topPx = preRowPx
+          newRows.push(oldRows[i])
+          n++
+        }
+        if (n >= renderCount) break
+      } */
+      this.$el.style.paddingTop = topPx + 'px'
+      this.$el.style.paddingBottom = this.virtualTotalHeight - topPx - virtualHeight + 'px'
+      return newRows
+    },
+    // 计算展示列
+    computeColumns(oldColumns) {
+      if (!this.$parent.virtual || !this.$parent.virtualColumn) return oldColumns
       const renderCount = this.renderMaxColumnsCount
       const len = oldColumns.length
-      let leftPx = this.scrollData.sLeft
-      if (renderCount === len || leftPx === undefined) return oldColumns
-      if (len === 0 || !this.$el) return []
-      // console.log(renderCount,len, leftPx)
+      let leftPx = this.tableScrollLeft
+      if (!renderCount || renderCount === len || leftPx === undefined || !this.$el) return oldColumns
       let cellPx = 0, virtualWidth = 0, n = 0, newColumns = []
-      oldColumns.forEach((column, i) => {
-        const cWidth = column.width || 80
+      for(let i = 0; i < len; i++) {
+        const cWidth = oldColumns[i].width || 80
         const preCellPx = cellPx
         cellPx += cWidth
         if ((cellPx > leftPx || len - i < renderCount) && n < renderCount) {
           virtualWidth += cWidth
           if (leftPx > 0 && leftPx > preCellPx) leftPx = preCellPx
+          newColumns.push(oldColumns[i])
           n++
-          newColumns.push(column)
         }
-      })
-      const paddingRight = cellPx - leftPx - virtualWidth
+        if (n >= renderCount) break
+      }
       this.$el.style.paddingLeft = leftPx + 'px'
-      this.$el.style.paddingRight = paddingRight + 'px'
-      this.$el.style.width = virtualWidth + 'px'
-      // console.log(paddingRight,leftPx, virtualWidth, newColumns)
+      this.$el.style.paddingRight = this.virtualTotalWidth - leftPx - virtualWidth + 'px'
       return newColumns
     },
     getKeyOfRow(row, index) {

@@ -35,7 +35,8 @@
       :class="[layout.scrollX ? `is-scrolling-${scrollPosition}` : 'is-scrolling-none']"
       :style="[bodyHeight]">
       <table-body
-        :scrollData="scrollData"
+        :tableScrollLeft="tableScrollLeft"
+        :tableScrollTop="tableScrollTop"
         :context="context"
         :store="store"
         :stripe="stripe"
@@ -110,6 +111,7 @@
         fixedBodyHeight]">
         <table-body
           fixed="left"
+          :tableScrollTop="tableScrollTop"
           :store="store"
           :stripe="stripe"
           :highlight="highlightCurrentRow"
@@ -171,6 +173,7 @@
         fixedBodyHeight]">
         <table-body
           fixed="right"
+          :tableScrollTop="tableScrollTop"
           :store="store"
           :stripe="stripe"
           :row-class-name="rowClassName"
@@ -251,6 +254,21 @@
       width: [String, Number],
 
       height: [String, Number],
+
+      rowHeight:{
+        type: Number,
+        default: 48
+      },
+      
+      virtual:{
+        type: Boolean,
+        default: false
+      },
+
+      virtualColumn:{
+        type: Boolean,
+        default: false
+      },
 
       maxHeight: [String, Number],
 
@@ -429,8 +447,10 @@
         } else {
           this.scrollPosition = 'middle';
         }
-        this.scrollData.sLeft = scrollLeft
-        this.scrollData.sTop = scrollTop
+        this.tableScrollLeft = scrollLeft
+        this.tableScrollTop = scrollTop
+        
+        // this.scrollData.sTop = scrollTop
       }),
 
       bindEvents() {
@@ -692,10 +712,8 @@
         // 是否拥有多级表头
         isGroup: false,
         scrollPosition: 'left',
-        scrollData:{
-          sLeft:0,
-          sTop:0
-        }
+        tableScrollLeft:0,
+        tableScrollTop:0
       };
     }
   };

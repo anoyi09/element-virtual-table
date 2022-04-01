@@ -7,7 +7,7 @@
       <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
     </p>
     <div>
-      <v-table :data="tableData" border :height="500" style="width: 100%">
+      <v-table virtual :data="tableData" border max-height="500" style="width: 100%">
         <el-table-column
           fixed="left"
           prop="date"
@@ -35,7 +35,7 @@
           fixed="right"
           prop="actions"
           label="操作">
-          <el-button type="text">查看</el-button>
+          <el-button type="text" style="padding: 0;">查看</el-button>
         </el-table-column>
       </v-table>
     </div>
@@ -54,22 +54,22 @@ export default {
   },
   data() {
     const tableData = []
-    for(let i = 0; i < 100; i++) {
+    for(let i = 0; i < 3000; i++) {
       tableData.push({
         id:'id' + i,
         date: '2016-05-02',
         name: '王小虎' + i,
         address: '上海市普陀区金沙江路 1518 弄 ' + i,
-        name0:Math.floor(Math.random() * 10000) + 'xxxx',
+        name0:Math.floor(Math.random() * 10000) + 'xxxx了士大夫士大夫士大夫士大夫士大夫',
         name1:Math.floor(Math.random() * 10000) + 'xxxx',
-        name2:Math.floor(Math.random() * 10000) + 'xxxx',
+        name2:Math.floor(Math.random() * 10000) + 'xxxx了士大夫士大夫士大夫士大夫士大夫',
         name3:Math.floor(Math.random() * 10000) + 'xxxx',
         name4:Math.floor(Math.random() * 10000) + 'xxxx',
         name5:Math.floor(Math.random() * 10000) + 'xxxx',
         name6:Math.floor(Math.random() * 10000) + 'xxxx',
         name7:Math.floor(Math.random() * 10000) + 'xxxx',
         name8:Math.floor(Math.random() * 10000) + 'xxxx',
-        name9:Math.floor(Math.random() * 10000) + 'xxxx',
+        name9:Math.floor(Math.random() * 10000) + 'xxxx了士大夫士大夫士大夫士大夫士大夫',
         name10:Math.floor(Math.random() * 10000) + 'xxxx',
         name11:Math.floor(Math.random() * 10000) + 'xxxx',
         name12:Math.floor(Math.random() * 10000) + 'xxxx',
