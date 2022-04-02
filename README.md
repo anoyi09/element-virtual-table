@@ -39,7 +39,7 @@ Vue.use(VTable)
 // 2、如果按需引入的 element-ui^2.15.7 那么需要引入 Table组件，不然样式会错误
 import Vue from 'vue'
 import { Table } from 'element-ui';
-import VTable from './table'
+import VTable from 'element-virtual-table'
 Vue.use(VTable)
 
 ```
