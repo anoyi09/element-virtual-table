@@ -449,8 +449,6 @@
         }
         this.tableScrollLeft = scrollLeft
         this.tableScrollTop = scrollTop
-        
-        // this.scrollData.sTop = scrollTop
       }),
 
       bindEvents() {

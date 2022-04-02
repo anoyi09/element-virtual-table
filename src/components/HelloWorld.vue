@@ -29,6 +29,9 @@
           :width="180"
           :prop="`name${item}`"
           :label="`明朝的法律时代的${item}`">
+          <template #default="{row}">
+            <el-input v-model="row.name" />
+          </template>
         </el-table-column>
         <el-table-column
           :width="140"
