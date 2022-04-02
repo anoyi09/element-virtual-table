@@ -35,6 +35,7 @@ export default {
 
   render() {
     const data = this.data || [];
+    const isVirtualColumn = this.table.virtual && this.table.virtualColumn
     return (
       <table
         class="el-table__body"
@@ -45,7 +46,11 @@ export default {
           {
             this.columns
               .filter((column, index) => !(this.columnsHidden[index] && this.fixed))
-              .map(column => <col name={column.id} key={column.id} width={column.width || 80} />)
+              .map(column => {
+                return isVirtualColumn 
+                ? <col name={column.id} key={column.id} width={column.width || 80} />
+                : <col name={column.id} key={column.id} />
+              })
           }
         </colgroup>
         <tbody>
@@ -89,6 +94,7 @@ export default {
       const tableHeight = parseInt(this.table.bodyHeight.height || this.table.bodyHeight['max-height']) || 0;
       if (!tableHeight) return 0;
       let maxCount = Math.ceil(tableHeight / this.rowHeight) + 3
+      this.store.states.columns.forEach(im => (im.showOverflowTooltip = true))
       // console.log('renderMaxRowCount:', maxCount);
       return maxCount
     },
@@ -109,7 +115,6 @@ export default {
           totalWidth -= headCWidth
           i++
         }
-        columns[j].showOverflowTooltip = true
         j++
       }
       // console.log(maxCount, 'maxCount')
