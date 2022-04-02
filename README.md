@@ -1,19 +1,19 @@
 # element-virtual-table
 
-## 安装 (Set up)
+## Set up
 ```
 npm install element-virtual-table --save
 ```
 
-## 说明 (Describe)
+## Describe
 
-此组件基于element-ui^2.15.7版本，el-table源码开发, 实现了表格水平，竖直方向的虚拟
+此组件基于element-ui^2.15.7版本，el-table源码开发, 实现了表格水平，竖直方向的
 
-滚动，只会渲染可视区的表格内容，可以流畅支持10万级别的数据渲染，支持树形表格虚拟渲染，
+虚拟滚动，只会渲染可视区的表格内容，可以流畅支持10万级别的数据渲染，支持树形表格
 
-数据越多由于2.0版本的Vue 内存占用较大，速度会慢下来
+虚拟渲染，数据越多由于2.0版本的Vue 内存占用较大，速度会慢下来
 
-## 参数扩展 (Props)
+## Props
 
 此组件扩展了3个props, 其他 props 与原 el-table 没有差异，老项目可以无痛使用，没有
 
@@ -29,7 +29,7 @@ npm install element-virtual-table --save
 |virtualColumn|是否开启列虚拟滚动|boolean|true/false|false
 |rowHeight|设置虚拟滚动得行高,默认值48，默认行是不自动撑开的，数据超出部分...toolTip提示|number|-|48
 
-## 如何使用 (How to use)
+## How to use
 ```
 // 1、如果全局引入了 element-ui^2.15.7 那么直接使用
 import Vue from 'vue'
@@ -43,7 +43,7 @@ import VTable from './table'
 Vue.use(VTable)
 
 ```
-### 开发 (Development)
+### Development
 ```
 npm run serve
 ```
